@@ -36,7 +36,10 @@ namespace AppServiceManagement
         // Creates a web app under a new app service plan
         public static void ConfigureAppService(IAzure azure)
         {
+            string appName = "MyConfiguredApp";
+            string rgName = "MyConfiguredRG";
 
+            var webApp = azure.WebApps.Define(appName).WithRegion(Region.USWest).WithNewResourceGroup(rgName).WithNewWindowsPlan(PricingTier.BasicB1).Create();
         }
     }
 }
