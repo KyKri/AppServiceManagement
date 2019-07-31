@@ -24,11 +24,19 @@ namespace AppServiceManagement
                 var azure = Azure.Configure().WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic).Authenticate(creds).WithDefaultSubscription();
 
                 Console.WriteLine($"Selected subscription is: {azure.SubscriptionId}");
+
+                ConfigureAppService(azure);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        // Creates a web app under a new app service plan
+        public static void ConfigureAppService(IAzure azure)
+        {
+
         }
     }
 }
