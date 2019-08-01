@@ -33,13 +33,23 @@ namespace AppServiceManagement
             }
         }
 
-        // Creates a web app under a new app service plan
+        // Creates a web app under a new app service plan and cleans up those resources when done
         public static void ConfigureAppService(IAzure azure)
         {
             string appName = "MyConfiguredApp";
             string rgName = "MyConfiguredRG";
 
+            // Create Web app in a new resource group with a new app service plan
             var webApp = azure.WebApps.Define(appName).WithRegion(Region.USWest).WithNewResourceGroup(rgName).WithNewWindowsPlan(PricingTier.BasicB1).Create();
+            var plan = webApp.AppServicePlanId;
+
+            // Delete resources one-by-one
+            // Note: might be most efficient to delete by 
+            azure.WebApps.DeleteById(webApp.Id);
+
+            azure.AppServices.AppServicePlans.DeleteById(plan);
+
+            azure.ResourceGroups.DeleteByName(rgName);
         }
     }
 }
