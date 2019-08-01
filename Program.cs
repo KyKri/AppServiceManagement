@@ -39,17 +39,26 @@ namespace AppServiceManagement
             string appName = "MyConfiguredApp";
             string rgName = "MyConfiguredRG";
 
+            Console.WriteLine("Creating resource group, app service plan and web app.");
+
             // Create Web app in a new resource group with a new app service plan
             var webApp = azure.WebApps.Define(appName).WithRegion(Region.USWest).WithNewResourceGroup(rgName).WithNewWindowsPlan(PricingTier.BasicB1).Create();
             var plan = webApp.AppServicePlanId;
 
+            Console.WriteLine("Resources created. Check portal.azure.com");
+            Console.WriteLine("Press any key to clean up resources.");
+            Console.ReadLine();
+            Console.WriteLine("Cleaning up resources.");
+
             // Delete resources one-by-one
-            // Note: might be most efficient to delete by 
+            // Note: might be most efficient to delete by resource group, but wanted to learn code for each piece. (This is a learning exercise afterall!)
             azure.WebApps.DeleteById(webApp.Id);
 
             azure.AppServices.AppServicePlans.DeleteById(plan);
 
             azure.ResourceGroups.DeleteByName(rgName);
+
+            Console.WriteLine("Resources cleaned.");
         }
     }
 }
