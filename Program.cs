@@ -42,10 +42,20 @@ namespace AppServiceManagement
             Console.WriteLine("Creating resource group, app service plan and web app.");
 
             // Create Web app in a new resource group with a new app service plan
-            var webApp = azure.WebApps.Define(appName).WithRegion(Region.USWest).WithNewResourceGroup(rgName).WithNewWindowsPlan(PricingTier.BasicB1).Create();
+            var webApp = azure.WebApps.Define(appName).WithRegion(Region.USWest).WithNewResourceGroup(rgName).WithNewWindowsPlan(PricingTier.StandardS1).Create();
             var plan = webApp.AppServicePlanId;
 
             Console.WriteLine("Resources created. Check portal.azure.com");
+            Console.WriteLine("Press any key to scale up app service.");
+            Console.ReadLine();
+            Console.WriteLine("Scaling up the app service.");
+
+            // Scale out the app service
+            IAppServicePlan appPlan = azure.AppServices.AppServicePlans.GetById(plan);
+            appPlan.Update().WithCapacity(appPlan.Capacity * 2).Apply();
+            
+
+            Console.WriteLine("App service scaled up.");
             Console.WriteLine("Press any key to clean up resources.");
             Console.ReadLine();
             Console.WriteLine("Cleaning up resources.");
